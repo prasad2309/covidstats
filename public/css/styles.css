@@ -1,0 +1,50 @@
+body {
+	font-family: "Lato";
+	background-color: #ffffff;
+background-image: url("https://www.transparenttextures.com/patterns/connected.png");}
+
+.navbar{
+	background-color: #865858;
+	color: white;
+	border-radius: 0;
+}
+
+.navbar h3{
+	margin-top: 2rem;
+	margin-bottom: 2rem;
+	margin-left: 2rem;
+}
+
+.card {
+	border-radius: 5px;
+	padding: 1rem;
+	text-align: center;
+/*	margin-top:2rem;
+*/}
+
+.input-state{
+	text-align: center;
+	margin-top: 7rem;
+	margin-bottom: 5rem;
+}
+
+.chart-container{
+	margin: auto;
+	margin-top: 5rem;
+	margin-bottom: 5rem;
+}
+
+.alert{
+	color: rgba(32,26,162,.8666666666666667);
+	background-color: rgba(32,26,162,.12549019607843137);
+	font-size: 3rem;
+	margin-top: 2rem;
+	margin-bottom: 3rem;
+	text-align: center;
+}
+
+@media only screen and (max-width: 1200px) {
+	.active-card{
+		margin-top: 2rem;
+	}
+}

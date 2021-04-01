@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Lato&family=Montserrat&family=Noto+Sans&family=Noto+Serif:ital@1&family=Open+Sans&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <title>COVID TRACKER</title>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <h3>COVID-19 TRACKING</h3>
+    </nav>
+
+    <div class="container input-state">
+        <form class="form-inline" action="/" method="post">
+            <div class="input-group input-group-lg">
+                <select name="selected_state" class="form-control input-lg " type="select" placeholder="Choose state">
+                    <option selected="true" disabled="disabled">Choose State</option>
+                    <% for(var i = 0;i < statewise_data.length;i++){ %>
+                    <option value=<%=statewise_data[i].state %>>
+                        <%= statewise_data[i].state %>
+                    </option>
+                    <% } %>
+                </select>
+                <div class="input-group-btn">
+                    <button class="btn btn-default" type="submit" name="button"><i class="glyphicon glyphicon-search"></i></button>
+                </div>
+            </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-6">
+                 <div class="alert">
+                    <%= stats.name %>
+                </div>
+ 
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="card" style="background-color: rgba(255,7,58,.12549019607843137);">
+                            <div class="card-body">
+                                <h4 style="color: #ff073a;">Confirmed</h4>
+                                <h5 style="color: #ff073a;">+
+                                    <%= stats.newConfirmed %>
+                                </h5>
+                                <h2 class="count" style="color: #ff073a;">
+                                    <%= stats.confirmed %>
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card active-card" style="background-color: rgba(0,123,255,.06274509803921569);">
+                            <div class="card-body">
+                                <h4 style="color: #007bff;">Active</h4>
+                                <h5 style="color: #007bff;">+ 0</h5>
+                                <h2 class="count" style="color: #007bff;">
+                                    <%= stats.active %>
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="card" style="background-color: rgba(40,167,69,.12549019607843137); margin-top: 2rem;">
+                            <div class="card-body">
+                                <h4 style="color: #28a745;">Recovered</h4>
+                                <h5 style="color: #28a745;">+
+                                    <%= stats.newRecovered %>
+                                </h5>
+                                <h2 class="count" style="color: #28a745;">
+                                    <%= stats.recovered %>
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card" style="background-color: rgba(108,117,125,.06274509803921569); margin-top: 2rem;">
+                            <div class="card-body">
+                                <h4 style="color: #6c757d;">Deceased</h4>
+                                <h5 style="color: #6c757d;">+
+                                    <%= stats.newDeaths %>
+                                </h5>
+                                <h2 class="count" style="color: #6c757d;">
+                                    <%= stats.death %>
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="alert">
+                      Daily Cases in INDIA
+                </div>
+                <canvas id="daily-cases"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script type="text/javascript">
+      //Number Count animation
+    $('.count').each(function() {
+        $(this).prop('counter', 0).animate({
+            counter: $(this).text()
+        }, {
+            duration: 1000,
+            easing: 'swing',
+            step: function(now) {
+                $(this).text(Math.ceil(now));
+            }
+        });
+    });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
+
+    <div class="container">
+        <div class="row chart-container">
+            <div class="alert" role="alert">
+                State wise number of Confirmed Cases
+            </div>
+            <canvas id="myChart"></canvas>
+        </div>
+        <div class="row chart-container">
+            <div class="alert" role="alert">
+                Statewise number of Death Cases
+            </div>
+            <canvas id="death-pie"></canvas>
+        </div>
+    </div>
+    <script>
+    var ctx3 = document.getElementById('daily-cases').getContext('2d');
+    gradient = ctx3.createLinearGradient(0, 0, 0, 450);
+
+    gradient.addColorStop(0, 'rgb(255,122,0,0.5)');
+    gradient.addColorStop(0.5, 'rgb(255,122,0,0.25)');
+    gradient.addColorStop(1, 'rgb(255,122,0,0)');
+
+    var myChart = new Chart(ctx3, {
+        type: 'line',
+        data: {
+            labels: <%- JSON.stringify(last_30days_dates) %>,
+            datasets: [{
+                label: 'Daily Cases in India',
+                backgroundColor: gradient,
+                pointBackgroundColor: 'rgb(255,122,0,0.5)',
+                borderWidth: 1,
+                borderColor: 'rgb(255,122,0,0.5)',
+                data: <%- JSON.stringify(last_30days_cases) %>
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+    </script>
+    <script>
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: <%- JSON.stringify(state_names) %>,
+            datasets: [{
+                label: 'Confirmed Cases',
+                data: <%- JSON.stringify(confirm_cases) %>,
+                backgroundColor: [
+                    '#e6194B', '#3cb44b', '#ffe119', '#4363d8', '#f58231', '#911eb4', '#42d4f4', '#f032e6', '#bfef45', '#fabed4', '#469990', '#dcbeff', '#9A6324', '#fffac8', '#800000', '#aaffc3', '#808000', '#ffd8b1', '#000075', '#a9a9a9', '#ffffff', '#000000'
+                ],
+                borderColor: [
+                    '#e6194B', '#3cb44b', '#ffe119', '#4363d8', '#f58231', '#911eb4', '#42d4f4', '#f032e6', '#bfef45', '#fabed4', '#469990', '#dcbeff', '#9A6324', '#fffac8', '#800000', '#aaffc3', '#808000', '#ffd8b1', '#000075', '#a9a9a9', '#ffffff', '#000000'
+
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+    </script>
+    <script>
+    var ctx2 = document.getElementById('death-pie').getContext('2d');
+    var myChart = new Chart(ctx2, {
+        type: 'pie',
+        data: {
+            labels: <%- JSON.stringify(state_names) %>,
+            datasets: [{
+                label: 'Death Cases',
+                data: <%- JSON.stringify(death_cases) %>,
+                backgroundColor: [
+                    '#e6194B', '#3cb44b', '#ffe119', '#4363d8', '#f58231', '#911eb4', '#42d4f4', '#f032e6', '#bfef45', '#fabed4', '#469990', '#dcbeff', '#9A6324', '#fffac8', '#800000', '#aaffc3', '#808000', '#ffd8b1', '#000075', '#a9a9a9', '#ffffff', '#000000'
+                ],
+                borderColor: [
+                    '#e6194B', '#3cb44b', '#ffe119', '#4363d8', '#f58231', '#911eb4', '#42d4f4', '#f032e6', '#bfef45', '#fabed4', '#469990', '#dcbeff', '#9A6324', '#fffac8', '#800000', '#aaffc3', '#808000', '#ffd8b1', '#000075', '#a9a9a9', '#ffffff', '#000000'
+
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+    </script>
+</body>
+
+</html>
