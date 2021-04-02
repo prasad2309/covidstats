@@ -48,12 +48,14 @@ app.get("/",function(req,res){
 	});
 
 	cases_timeline = cases.slice(-31,-1);
+	cases_timeline.push(cases[cases.length - 1]);
 	cases_timeline.forEach(item => {
 		last_30days_cases.push(Number(item.dailyconfirmed));
 		last_30days_dates.push(item.dateymd);
 	});
 
 	console.log(cases_timeline);
+
 	res.render("index",{statewise_data:statewise_data,stats:stats,confirm_cases:confirm_cases,state_names:state_names,death_cases:death_cases,last_30days_cases:last_30days_cases,last_30days_dates:last_30days_dates});
 });
 
