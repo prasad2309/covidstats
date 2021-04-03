@@ -54,7 +54,7 @@ app.get("/",function(req,res){
 		last_30days_dates.push(item.dateymd);
 	});
 
-	console.log(cases_timeline);
+	// console.log(cases_timeline);
 
 	res.render("index",{statewise_data:statewise_data,stats:stats,confirm_cases:confirm_cases,state_names:state_names,death_cases:death_cases,last_30days_cases:last_30days_cases,last_30days_dates:last_30days_dates});
 });
@@ -63,7 +63,7 @@ app.post("/",function(req,res){
 	let chosen_state = req.body.selected_state;
 	statewise_data.forEach(s => {
 		if(s.state === chosen_state){
-			console.log(s.state);
+			// console.log(s.state);
 			stats.name = s.state;
 			stats.active = s.active;
 			stats.confirmed = s.confirmed;
@@ -78,7 +78,7 @@ app.post("/",function(req,res){
 });
 
 
-app.listen(process.env.PORT || 3000,function(){
+app.listen(process.env.PORT || 8000,function(){
 	console.log("Server started on port 3000");
 })
 
