@@ -22,7 +22,7 @@ let stats = {
 
 let cases = [];
 
-axios.get('https://api.covid19india.org/data.json')
+axios.get('https://data.covid19india.org/data.json')
   .then(response => {
     statewise_data = response.data.statewise;
     cases = response.data.cases_time_series;
@@ -54,7 +54,7 @@ app.get("/",function(req,res){
 		last_30days_dates.push(item.dateymd);
 	});
 
-	// console.log(cases_timeline);
+	// console.log(last_30days_cases);
 
 	res.render("index",{statewise_data:statewise_data,stats:stats,confirm_cases:confirm_cases,state_names:state_names,death_cases:death_cases,last_30days_cases:last_30days_cases,last_30days_dates:last_30days_dates});
 });
@@ -79,6 +79,5 @@ app.post("/",function(req,res){
 
 
 app.listen(process.env.PORT || 8000,function(){
-	console.log("Server started on port 3000");
+	console.log("Server started on port 8000");
 })
-
